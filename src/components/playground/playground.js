@@ -1,3 +1,5 @@
+import './playground.css'
+
 function FillCardCollection(props) {
 
   let rowArr = []
@@ -7,7 +9,7 @@ function FillCardCollection(props) {
   let j = 0
   while (i < props.num) {
 
-    let cell = <td key={i+1}> {i+1} </td>
+    let cell = <td key={i+1}>  </td>
     cellArr.push(cell)
 
     i++

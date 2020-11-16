@@ -1,0 +1,9 @@
+table {
+  border-collapse: collapse;
+  border: 1px solid grey;
+  width: 1000px
+}
+
+tr td{
+  border: 1px solid grey;
+}
