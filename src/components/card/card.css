@@ -1,0 +1,14 @@
+.front {
+  visibility: hidden;
+  position: absolute;
+  width: 150px;
+  height: 210px;
+}
+.back {
+
+  width: 150px;
+  height: 210px;
+}
+.hide {
+  visibility: visible;
+}
