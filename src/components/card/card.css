@@ -9,6 +9,10 @@
   width: 150px;
   height: 210px;
 }
-.hide {
+.open {
   visibility: visible;
+}
+
+.hide {
+  visibility: hidden;
 }
