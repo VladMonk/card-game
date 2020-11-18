@@ -52,7 +52,7 @@ function Card(props) {
         switchClick('off', document.querySelectorAll('img'))
         setTimeout(() => {
           switchClick('on', document.querySelectorAll('img'))
-          prevElem.classList.remove('open')
+          prevElem.classList.remove('open', 'clicked')
           elem.classList.remove('open')
         }, 2000)
       }
