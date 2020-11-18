@@ -1,41 +1,62 @@
 import './card.css'
-import React from 'react'
 
 localStorage.clear()
 
 function Card(props) {
+
+  function switchClick(cmd, elemArr) {
+    switch (cmd) {
+      case 'off':
+        elemArr.forEach((elem) => {
+          elem.classList.add('cant-click')
+        });
+        break;
+      case 'on':
+        elemArr.forEach((elem) => {
+          elem.classList.remove('cant-click')
+        });
+        break;
+      default:
+        break;
+    }
+  }
+
   function handleClick(e) {
     let elem = e.target.closest('td').firstElementChild.firstElementChild
-    elem.classList.add('open')
 
+    if (!(elem.classList.contains('cant-click'))) {
 
+      elem.classList.add('open')
+      let value = props.card.value
 
+      if(localStorage.length === 0) {
+        localStorage.setItem(value, elem)
+        elem.classList.add('clicked')
 
-    let id = props.card.value
+      } else if(localStorage.getItem(value)) {
 
-    if(localStorage.length === 0) {
-      localStorage.setItem(id, props.card.url)
-      elem.classList.add('clicked')
+        if (!(elem.classList.contains('clicked'))) {
+          let cards = document.querySelectorAll(`[value="${value}"]`)
+          cards.forEach((item) => {
+            Array.from(item.children).forEach((child) => {
+              child.classList.remove('clicked')
+              child.classList.add('hide')
+            });
+          });
+          localStorage.clear()
+        }
 
-    } else if(localStorage.getItem(id)) {
-      alert('ura pobeda');
-      localStorage.clear()
-
-      let cards = document.querySelectorAll(`[value="${id}"]`)
-      cards.forEach((item) => {
-        item.classList.add('hide')
-      });
-
-
-
-    } else {
-      localStorage.clear()
+      } else {
+        localStorage.clear()
+        let prevElem = document.querySelector(`.clicked`)
+        switchClick('off', document.querySelectorAll('img'))
+        setTimeout(() => {
+          switchClick('on', document.querySelectorAll('img'))
+          prevElem.classList.remove('open')
+          elem.classList.remove('open')
+        }, 2000)
+      }
     }
-
-
-
-
-
   }
   return (
 		<div value = {props.card.value} className = 'card-holder' onClick = {handleClick}>
