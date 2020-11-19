@@ -1,40 +1,57 @@
 import './card.css'
+import Score from '../display-score/display-score'
+import MainMenu from '../main-menu/main-menu'
+import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 
-localStorage.clear()
+localStorage.pair = 0
+localStorage.item = 'empty'
+localStorage.score = 0
 
-function Card(props) {
+function updateScore() {
+  ReactDOM.render(
+    <Score score = {localStorage.score} />,
+    document.getElementById('score')
+  )
+}
 
-  function switchClick(cmd, elemArr) {
-    switch (cmd) {
-      case 'off':
-        elemArr.forEach((elem) => {
-          elem.classList.add('cant-click')
-        });
-        break;
-      case 'on':
-        elemArr.forEach((elem) => {
-          elem.classList.remove('cant-click')
-        });
-        break;
-      default:
-        break;
-    }
+function switchClick(cmd, elemArr) {
+  switch (cmd) {
+    case 'off':
+      elemArr.forEach((elem) => {
+        elem.classList.add('cant-click')
+      });
+      break;
+    case 'on':
+      elemArr.forEach((elem) => {
+        elem.classList.remove('cant-click')
+      });
+      break;
+    default:
+      break;
+  }
+}
+
+
+class Card extends React.Component {
+  constructor(props) {
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
   }
 
-  function handleClick(e) {
+  handleClick(e) {
     let elem = e.target.closest('td').firstElementChild.firstElementChild
 
     if (!(elem.classList.contains('cant-click'))) {
 
       elem.classList.add('open')
-      let value = props.card.value
+      let value = this.props.card.value
 
-      if(localStorage.length === 0) {
-        localStorage.setItem(value, elem)
+      if(localStorage.item === 'empty') {
+        localStorage.item = value
         elem.classList.add('clicked')
 
-      } else if(localStorage.getItem(value)) {
-
+      } else if(localStorage.item === value) {
         if (!(elem.classList.contains('clicked'))) {
           let cards = document.querySelectorAll(`[value="${value}"]`)
           cards.forEach((item) => {
@@ -43,12 +60,26 @@ function Card(props) {
               child.classList.add('hide')
             });
           });
-          localStorage.clear()
+          localStorage.item = 'empty'
+          localStorage.score = Number(localStorage.score) + 1
+          localStorage.pair = Number(localStorage.pair) + 1
+          if(Number(localStorage.pair) === Number(localStorage.num)/2){
+            alert(`Congratulations, ${localStorage.name}, u won with ${localStorage.score} steps`)
+            ReactDOM.render(
+              <MainMenu />,
+              document.querySelector('.App')
+            )
+          }
+          updateScore()
         }
 
       } else {
-        localStorage.clear()
+
         let prevElem = document.querySelector(`.clicked`)
+        localStorage.item = 'empty'
+        localStorage.score = Number(localStorage.score) + 1
+        updateScore()
+
         switchClick('off', document.querySelectorAll('img'))
         setTimeout(() => {
           switchClick('on', document.querySelectorAll('img'))
@@ -58,12 +89,15 @@ function Card(props) {
       }
     }
   }
-  return (
-		<div value = {props.card.value} className = 'card-holder' onClick = {handleClick}>
-      <img src = {props.card.url} className = 'front'/>
-      <img src = '/png/back/back@2x.png' className = 'back' />
-		</div>
-  )
+
+  render() {
+    return (
+  		<div value = {this.props.card.value} className = 'card-holder' onClick = {this.handleClick}>
+        <img src = {this.props.card.url} className = 'front'/>
+        <img src = '/png/back/back@2x.png' className = 'back' />
+  		</div>
+    )
+  }
 }
 
 
